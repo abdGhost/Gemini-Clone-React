@@ -39,24 +39,24 @@ const ContextProvider = (props) => {
       response = await run(input);
     }
 
-    let responseArray = response.split("**");
-    let newResponse = "";
+    // Step 1: Format Bold Text
+    let formattedResponse = response.replace(/\*\*(.*?)\*\*/g, "<b>$1</b>");
 
-    for (let i = 0; i < responseArray.length; i++) {
-      if (i === 0 || i % 2 !== 1) {
-        newResponse += responseArray[i];
-      } else {
-        newResponse += "<b>" + responseArray[i] + "</b>";
-      }
-    }
+    // Step 2: Format Code Blocks (detect ``` and replace with <pre><code>)
+    formattedResponse = formattedResponse.replace(
+      /```([\s\S]*?)```/g,
+      "<pre><code>$1</code></pre>"
+    );
 
-    let newResponse2 = newResponse.split("*").join("</br>");
-    let newResponseArray = newResponse2.split(" ");
+    // Step 3: Add Line Breaks
+    formattedResponse = formattedResponse.replace(/\*/g, "<br/>");
 
-    for (let i = 0; i < newResponseArray.length; i++) {
-      const nextWord = newResponseArray[i];
-      delayPara(i, nextWord + " ");
-    }
+    // Step 4: Split words to display gradually
+    const formattedResponseArray = formattedResponse.split(" ");
+    formattedResponseArray.forEach((word, index) => {
+      delayPara(index, word + " ");
+    });
+
     setLoading(false);
     setInput("");
   };
@@ -64,24 +64,17 @@ const ContextProvider = (props) => {
   const contextValue = {
     input,
     setInput,
-
     prevPrompts,
     setPrevPrompts,
-
     onSent,
-
     recentPrompt,
     setRecentPrompt,
-
     showResult,
     setShowResult,
-
     loading,
     setLoading,
-
     resultData,
     setResultData,
-
     newChat,
   };
 

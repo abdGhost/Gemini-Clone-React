@@ -177,3 +177,25 @@
   font-weight: 300;
   line-height: 1.8;
 }
+
+.result-data pre {
+  background-color: #f4f4f4;
+  padding: 10px;
+  border-radius: 5px;
+  overflow-x: auto;
+  white-space: pre-wrap;
+}
+
+.result-data code {
+  font-family: monospace;
+  color: #d6336c;
+}
+
+.result-data b {
+  font-weight: bold;
+  color: #333;
+}
+
+.result-data br {
+  line-height: 1.5;
+}
