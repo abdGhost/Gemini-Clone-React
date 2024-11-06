@@ -1,8 +1,8 @@
-/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import { createContext, useState } from "react";
 import run from "../config/gemini";
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const Context = createContext();
 
 const ContextProvider = (props) => {
@@ -19,15 +19,26 @@ const ContextProvider = (props) => {
     }, 75 * index);
   };
 
+  const newChat = () => {
+    setLoading(false);
+    setShowResult(false);
+  };
+
   const onSent = async (prompt) => {
     setResultData("");
     setLoading(true);
     setShowResult(true);
-    setRecentPrompt(input);
+    let response;
 
-    setPrevPrompts((prev) => [...prev, input]);
+    if (prompt !== undefined) {
+      response = await run(prompt);
+      setRecentPrompt(prompt);
+    } else {
+      setPrevPrompts((prev) => [...prev, input]);
+      setRecentPrompt(input);
+      response = await run(input);
+    }
 
-    const response = await run(input);
     let responseArray = response.split("**");
     let newResponse = "";
 
@@ -40,7 +51,6 @@ const ContextProvider = (props) => {
     }
 
     let newResponse2 = newResponse.split("*").join("</br>");
-
     let newResponseArray = newResponse2.split(" ");
 
     for (let i = 0; i < newResponseArray.length; i++) {
@@ -71,6 +81,8 @@ const ContextProvider = (props) => {
 
     resultData,
     setResultData,
+
+    newChat,
   };
 
   return (
